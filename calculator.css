@@ -1,0 +1,67 @@
+body {
+  text-align: center;
+  background-color: #f5efe9;
+}
+
+#calcBody {
+  margin-top: 70px;
+  display: inline-flex;
+  flex-direction: column;
+  background-color: #ffd39b;
+  align-items: center;
+  border: 0.5em #4c4c4c solid;
+  border-radius: 25px;
+}
+
+#screen {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width : 26em;
+  height : 8em;
+  margin: 3em 2em 2em 2em;
+  background-color: #f5efe9;
+  border: 0.3em #4c4c4c solid;
+  border-radius: 25px;
+}
+
+h1 {
+  font-size: 4em;
+  margin-right: 10px;
+  color: #4c4c4c;
+  font-family: "Baloo Bhai", helvetica, serif;
+  letter-spacing: 0.04em;
+}
+
+#gridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-gap: 0.7em;
+  margin-bottom: 2.5em;
+}
+
+.calcButton {
+  font-family: "Baloo Bhai", helvetica, serif;
+  color: #4c4c4c;
+  background-color: #f5efe9;
+  border : 0.3em #4c4c4c solid;
+  width : 7.4em;
+  height: 6em;
+  border-radius : 10px 10px 20px 20px;
+  cursor: default;
+  outline: none;
+}
+
+.calcButton:hover {
+  transform: scale(1.05);
+}
+
+.calcButton:active {
+  transform: scale(1);
+}
+
+.clearButton {
+  grid-column: 1 / span 2;
+  width : 15.5em;
+}
