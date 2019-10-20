@@ -41,5 +41,12 @@ function findOperators(){
 }
 
 function calcString(operator){
-  
+  console.log(cutString(operator));
+}
+
+function cutString(value) {
+  let parts = displayValue.split(value);
+  if(value == "+"){
+      return Number(parts[0]) + Number(parts[1]);
+  }
 }
