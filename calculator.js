@@ -30,23 +30,29 @@ document.querySelector(".delButton").onclick = function(){
   updateDisplay();
 };
 
-document.querySelector(".equalButton").addEventListener("click", findOperators);
+document.querySelector(".equalButton").addEventListener("click", calc);
 
-function findOperators(){
-  for(let i = 0; i < operators.length; i++) {
-    if(displayValue.includes(operators[i])) {
-      calcString(operators[i]);
-    }
-  }
+function calc() {
+  let operatorCount = 0;
+  let firstOperator;
+  let calcArray = displayValue.split("");
+  calcArray.forEach(function(item, index){
+    operators.forEach(function(operator){
+      if(operator == item){
+        if(operatorCount == 1){
+          let part = calcArray.slice(0, index);
+          calculatePart(part, firstOperator);
+        }
+        firstOperator = operator;
+        operatorCount++;
+      }
+    });
+  });
 }
 
-function calcString(operator){
-  console.log(cutString(operator));
-}
-
-function cutString(value) {
-  let parts = displayValue.split(value);
-  if(value == "+"){
-      return Number(parts[0]) + Number(parts[1]);
-  }
+function calculatePart(array, operator){
+  console.log(array, operator);
+  let num1 = array.slice(0, array.indexOf(operator));
+  let num2 = array.slice(array.indexOf(operator) + 1, array.length);
+  console.log(num1, num2);
 }
