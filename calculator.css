@@ -37,7 +37,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  grid-gap: 0.7em;
+  grid-gap: 0.8em 0.7em;
   margin-bottom: 2.5em;
 }
 
@@ -63,5 +63,10 @@ h1 {
 
 .clearButton {
   grid-column: 1 / span 2;
+  width : 15.5em;
+}
+
+.equalButton {
+  grid-column: 3 / span 2;
   width : 15.5em;
 }

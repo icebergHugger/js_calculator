@@ -1,12 +1,10 @@
 let displayValue = "";
 let maxStringLength = 10;
-const firstPriority = ["x", "/"];
-const secondPriority = ["+", "-"]
-let operators = ["+","-","/","x"]
+let error = false;
+const forbidden = ["x", "/", "."];
+const first_op = ["x", "/"];
+const second_op = ["+", "-"]
 
-function updateDisplay() {
-  document.querySelector("h1").innerHTML = displayValue;
-}
 
 let num = document.querySelectorAll(".number");
 num.forEach(function(number) {
@@ -21,6 +19,20 @@ function addNumber() {
   }
 }
 
+function addNumber() {
+  let number = event.target.innerHTML;
+  if(displayValue.length < maxStringLength){
+    if(number == "." && displayValue.slice(-1) == "."){
+      return;
+    }
+    if(isNaN(number) == false && displayValue.slice(-2, -1) == "."){
+      return;
+    }
+    displayValue += number;
+    updateDisplay();
+  };
+}
+
 document.querySelector(".clearButton").onclick = function(){
   displayValue = "";
   updateDisplay();
@@ -32,62 +44,67 @@ document.querySelector(".delButton").onclick = function(){
   updateDisplay();
 };
 
-
 document.querySelector(".equalButton").addEventListener("click", function(){
-  equationParting(displayValue.split(""));
+  checkString(displayValue);
 });
 
-function equationParting(array) {
-  //Crate array with index of all operators
-  let operatorArray = [];
-  array.forEach(function(item, index) {
-    if(operators.includes(item)){
-      operatorArray.push(index + item);
-    }
-  });
-
-  operatorArray.forEach(function(item, index){
-    if(firstPriority.includes(item.substr(1))){
-      let part = array.splice(index - 1, array.lenght - index + 1);
-      console.log(part);
-    }
-  });
-
-  console.log(operatorArray);
+function checkString(string){
+  let firstChar = displayValue.charAt(0);
+  let lastCharInt = parseInt(displayValue.slice(-1));
+  if(forbidden.indexOf(firstChar) != -1 ||
+    !Number.isInteger(lastCharInt) ){
+    errorHandler();
+  }else {
+    changeArray(string);
+  }
 }
 
+function changeArray(string){
+  array = string.split(/[-+x/]/);
+  operator_array = string.replace(/[0-9, .]/g, '').split("");
 
-function calc() {
-  let operatorCount = 0;
-  let firstOperator;
-  let calcArray = displayValue.split("");
-  calcArray.forEach(function(item, index){
-    operators.forEach(function(operator){
-      if(operator == item){
-        if(operatorCount == 1){
-          let part = calcArray.slice(0, index);
-          calcArray = calcArray.slice(index, calcArray.length);
-          console.log(calcArray);
-          let newNum = calculatePart(part, firstOperator);
-          console.log(newNum);
-          let newCalcArray = newNum.concat(calcArray);
-          console.log(newCalcArray);
-        }
-        firstOperator = operator;
-        operatorCount++;
+  let length = operator_array.length;
+  for(let i = 0; i < length; i++){
+    array.splice(2*i + 1, 0, operator_array[i]);
+  }
+  divideEquation(array);
+}
+
+function divideEquation(equation){
+  let equLength = equation.length;
+  if(equation.includes("x") || equation.includes("/")){
+    for(let i = 0; i < equLength; i++){
+      if(first_op.includes(equation[i])){
+        removeFromArray(equation, i);
+        break;
       }
-    });
-  });
+    }
+  }else if (equation.includes("+") || equation.includes("-")){
+    for(let i = 0; i < equLength; i++){
+      if(second_op.includes(equation[i])){
+        removeFromArray(equation, i);
+        break;
+      }
+    }
+  }else{
+    if(error){
+      return;
+    }
+    result = Math.round((Number(equation) + Number.EPSILON) * 100)
+     / 100;
+    displayValue = result.toString();
+    updateDisplay();
+  }
 }
 
-function calculatePart(array, operator){
-  let num1 = array.slice(0, array.indexOf(operator)).join("");
-  let num2 = array.slice(array.indexOf(operator) + 1, array.length).join("");
-  let newNum = calcSwitch(num1, num2, operator);
-  return newNum.toString().split("");
+function removeFromArray(equation, operator){
+  let part = equation.slice(operator - 1, operator + 2);
+  newNumber = calcSwitch(part[0], part[1], part[2]);
+  equation.splice(operator - 1 , 3, newNumber);
+  divideEquation(equation);
 }
 
-function calcSwitch(num1, num2, operator){
+function calcSwitch(num1, operator, num2){
   switch (operator) {
     case "+":
       return Number(num1) + Number(num2);
@@ -96,12 +113,30 @@ function calcSwitch(num1, num2, operator){
       return Number(num1) - Number(num2);
       break;
     case "/":
+      if(num1 == 0 && num2 == 0){
+        errorHandler();
+      }
       return Number(num1) / Number(num2);
       break;
     case "x":
       return Number(num1) * Number(num2);
       break;
     default:
-      return "error";
+      errorHandler();
   }
+}
+
+function errorHandler(){
+  error = true;
+  displayValue = "ERROR";
+  updateDisplay();
+  setTimeout(function(){
+    error = false;
+    displayValue = "";
+    updateDisplay();
+  },900);
+}
+
+function updateDisplay() {
+  document.querySelector("h1").innerHTML = displayValue;
 }
