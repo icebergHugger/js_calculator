@@ -99,6 +99,9 @@ function divideEquation(equation){
 
 function removeFromArray(equation, operator){
   let part = equation.slice(operator - 1, operator + 2);
+  if(Number.isInteger(part[0]) || Number.isInteger(part[2])){
+    errorHandler();
+  }
   newNumber = calcSwitch(part[0], part[1], part[2]);
   equation.splice(operator - 1 , 3, newNumber);
   divideEquation(equation);
